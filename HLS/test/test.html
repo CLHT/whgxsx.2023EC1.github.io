@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>M3U8 PLAYER TEST 2023</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+        }
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+        }
+        .video-player {
+            width: 300px; /* 可以根据需要调整宽度 */
+            border-radius: 10px; /* 圆角大小 */
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        video {
+            width: 100%;
+            height: auto;
+            border: none;
+            border-radius: inherit; /* 继承圆角 */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 重复以下结构来添加更多播放器 -->
+        <div class="video-player">
+            <video id="video1" controls playsinline></video>
+        </div>
+        <!-- ... -->
+        <div class="video-player">
+            <video id="video2" controls playsinline></video>
+        </div>
+        <div class="video-player">
+            <video id="video3" controls playsinline></video>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const videoElements = document.querySelectorAll('video');
+            const m3u8Urls = [
+                'https://upyun.luckly-mjw.cn/Assets/media-source/example/media/index.m3u8', // 替换为你的m3u8视频链接
+                'https://upyun.luckly-mjw.cn/Assets/media-source/example/media/index.m3u8',
+                'https://upyun.luckly-mjw.cn/Assets/media-source/example/media/index.m3u8',
+                // 'https://example.com/path/to/your/video4.m3u8',
+                // 'https://example.com/path/to/your/video5.m3u8'
+            ];
+
+            videoElements.forEach((video, index) => {
+                if (Hls.isSupported()) {
+                    var hls = new Hls();
+                    hls.loadSource(m3u8Urls[index]);
+                    hls.attachMedia(video);
+                    hls.on(Hls.Events.MANIFEST_PARSED, () => {
+                        video.play();
+                    });
+                } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+                    video.src = m3u8Urls[index];
+                    video.addEventListener('canplay', function() {
+                        video.play();
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
